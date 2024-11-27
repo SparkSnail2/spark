@@ -25,9 +25,12 @@ stages:
             os: windows
         ${{ else }}:
           pool:
-            name: Cosmos2MT-AzureDevOps-AgentPool
-            image: 1es-pt-ubuntu-22
-            os: linux
+            ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+              name: NetCore-Public
+              demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
+            ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
 
         steps:
         - task: JavaToolInstaller@0
