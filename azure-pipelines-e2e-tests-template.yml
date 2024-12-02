@@ -78,6 +78,11 @@ stages:
             targetPath: $(Build.ArtifactStagingDirectory)/Microsoft.Spark.Binaries
             artifactName: Microsoft.Spark.Binaries
 
+        - script: |
+              cd $(Build.ArtifactStagingDirectory)
+              dir /B /S
+          displayName: '[TEMP] Print ArtifactStagingDirectory Structure'
+
         - pwsh: |
             $framework = "net8.0"
 
@@ -105,6 +110,11 @@ stages:
 
         - checkout: self
           path: s$(PATH_SEPARATOR)dotnet-spark
+
+        - script: |
+              cd $(ArtifactPath)
+              dir /B /S
+          displayName: '[TEMP] Print ArtifactPath Structure'
 
         - task: CopyFiles@2
           displayName: Copy jars
